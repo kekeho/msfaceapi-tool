@@ -2,7 +2,6 @@
 
 Utils for Microsft Face API
 
-
 ## Build
 
 ### 1. Edit api_config.json
@@ -16,7 +15,7 @@ Utils for Microsft Face API
 docker build -t mface .
 ```
 
-### Usage
+## Usage
 
 ```sh
 docker run -i -v /path/to/images_dir:/images:ro -v /path/to/result.json:/code/mface_result mface
