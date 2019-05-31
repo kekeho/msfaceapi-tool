@@ -1,7 +1,0 @@
-version: "3"
-
-services:
-  app:
-    build: .
-    volumes:
-      - ./api_config.json:/code/api_config.json:ro
