@@ -19,7 +19,8 @@ c = lib.utils.Client(FACE_API_URL, SUBSCRIPTION_KEY)
 def __target(image_filename) -> List[lib.utils.Face]:
     with open(image_filename, 'rb') as img:
         image = img.read()
-        return c.get(image, image_filename)
+        result = c.get(image, image_filename)
+        return image_filename, result
 
 
 def main():
@@ -36,9 +37,12 @@ def main():
     
     # save json
     json_dict = []
-    for image in result:
-        filename = image[0].image_filename
-        json_dict.append([filename, [f.json_dict for f in image]])
+    for filename, image in result:
+        if image != None:
+            print(f'{filename}: {len(image)}')
+            json_dict.append([filename, [f.json_dict for f in image]])
+        else:
+            print(f'Skip {filename}: no face')
     
     with open(args.save, 'w') as save:
         save.write(json.dumps(json_dict, indent=4, separators=(',', ':', )))

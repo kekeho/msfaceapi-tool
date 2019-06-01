@@ -6,5 +6,5 @@ WORKDIR /code
 COPY ./requirements.txt .
 RUN pip3 install -r requirements.txt
 
-COPY . .
+COPY ./ /code
 ENTRYPOINT [ "python", "mface.py", "/images"]
