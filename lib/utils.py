@@ -1,6 +1,8 @@
 import requests
 import json
 import time
+from PIL import Image
+import io
 from typing import List, Dict, ByteString
 
 
@@ -82,14 +84,25 @@ class Client(object):
         }
         self.endpoint_url = url
 
-    def get(self, image_binary: ByteString, image_filename: str) -> List[Face] or None:
+    def get(self, image_binary: ByteString, image_filename: str, auto_enlarge: bool = True) -> List[Face] or None:
         """Send image to Face API server, and get result json
         Args:
             image_binary: image (face included)
             image_filename: filename
+            auto_enlarge:
+                True: Send enlarged image (improve recognition rate)
+                False: Send original image
         Return:
             Faces list
         """
+        if auto_enlarge:
+            image = Image.open(image_filename)
+            enlarge_rate = 4200 / max(image.width, image.height)
+            enlarged_image = image.resize(map(int, map(lambda x: x*enlarge_rate, (image.width, image.height))))
+            fp = io.BytesIO()
+            enlarged_image.save(fp, 'JPEG')
+            image_binary = fp.getvalue()
+
         response = requests.post(
             self.endpoint_url, params=self.params, headers=self.headers, data=image_binary)
         resp_json = response.json()
